@@ -7,7 +7,6 @@ import (
 
 	"fmt"
 	_ "github.com/gonum/blas"
-	"github.com/gonum/blas/cblas"
 	"github.com/gonum/matrix/mat64"
 )
 
@@ -22,10 +21,6 @@ type LinearRegression struct {
 	regressionCoefficients []float64
 	attrs                  []base.Attribute
 	cls                    base.Attribute
-}
-
-func init() {
-	mat64.Register(cblas.Blas{})
 }
 
 func NewLinearRegression() *LinearRegression {
@@ -85,12 +80,14 @@ func (lr *LinearRegression) Fit(inst base.FixedDataGrid) error {
 	})
 
 	n := cols
-	qr := mat64.QR(explVariables)
-	q := qr.Q()
-	reg := qr.R()
+	qr := new(mat64.QR)
+	qr.Factorize(explVariables)
+	var q, reg mat64.Dense
+	q.QFromQR(qr)
+	reg.RFromQR(qr)
 
 	var transposed, qty mat64.Dense
-	transposed.TCopy(q)
+	transposed.Clone(q.T())
 	qty.Mul(&transposed, observed)
 
 	regressionCoefficients := make([]float64, n)

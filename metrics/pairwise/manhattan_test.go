@@ -33,8 +33,8 @@ func TestManhattan(t *testing.T) {
 		})
 
 		Convey("When calculating distance with row vectors", func() {
-			vectorX.TCopy(vectorX)
-			vectorY.TCopy(vectorY)
+			vectorX.Copy(vectorX.T())
+			vectorY.Copy(vectorY.T())
 			result := manhattan.Distance(vectorX, vectorY)
 
 			Convey("The result should be 5", func() {
@@ -42,9 +42,9 @@ func TestManhattan(t *testing.T) {
 			})
 		})
 
-		Convey("When calculating distance with different dimention matrices", func() {
-			vectorX.TCopy(vectorX)
-			So(func() { manhattan.Distance(vectorX, vectorY) }, ShouldPanicWith, mat64.ErrShape)
+		Convey("When calculating distance with different dimension matrices", func() {
+			vectorX.Clone(vectorX.T())
+			So(func() { manhattan.Distance(vectorX, vectorY) }, ShouldPanic)
 		})
 
 	})

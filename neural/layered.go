@@ -49,7 +49,7 @@ func NewMultiLayerNet(layers []int) *MultiLayerNet {
 
 // String returns a human-readable summary of this network.
 func (m *MultiLayerNet) String() string {
-	return fmt.Sprintf("MultiLayerNet(%v, %v, %.2f, %.2f, %d", m.layers, m.network, m.Convergence, m.LearningRate, m.MaxIterations)
+	return fmt.Sprintf("MultiLayerNet(%v, %v, %f, %f, %d", m.layers, m.network, m.Convergence, m.LearningRate, m.MaxIterations)
 }
 
 func (m *MultiLayerNet) convertToFloatInsts(X base.FixedDataGrid) base.FixedDataGrid {
@@ -322,7 +322,7 @@ func (m *MultiLayerNet) Fit(X base.FixedDataGrid) {
 			}
 
 			// Update total error
-			totalError += math.Abs(errVec.Sum())
+			totalError += math.Abs(mat64.Sum(errVec))
 
 			// Back-propagate the error
 			b := m.network.Error(trainVec, errVec, totalLayers)
