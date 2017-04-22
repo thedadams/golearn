@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/sjwhitworth/golearn/base"
 	"github.com/sjwhitworth/golearn/evaluation"
 	"github.com/sjwhitworth/golearn/knn"
@@ -14,14 +15,17 @@ func main() {
 	}
 
 	//Initialises a new KNN classifier
-	cls := knn.NewKnnClassifier("euclidean", 2)
+	cls := knn.NewKnnClassifier("euclidean", "linear", 2)
 
 	//Do a training-test split
 	trainData, testData := base.InstancesTrainTestSplit(rawData, 0.50)
 	cls.Fit(trainData)
 
 	//Calculates the Euclidean distance and returns the most popular label
-	predictions := cls.Predict(testData)
+	predictions, err := cls.Predict(testData)
+	if err != nil {
+		panic(err)
+	}
 	fmt.Println(predictions)
 
 	// Prints precision/recall metrics
